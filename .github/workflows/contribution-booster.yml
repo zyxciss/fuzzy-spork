@@ -1,0 +1,38 @@
+name: GitHub Contribution Booster
+
+on: 
+  workflow_dispatch # Allows manual execution
+
+jobs:
+  boost-contributions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Git User
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+
+      - name: Generate Fake Contributions
+        run: |
+          for i in {1..125}  # 125 commits last year
+          do
+            DATE=$(date -d "$((RANDOM % 365)) days ago" --iso-8601=seconds)
+            echo "Fake commit on $DATE" >> log.txt
+            git add log.txt
+            GIT_COMMITTER_DATE="$DATE" git commit -m "Fake commit on $DATE" --date="$DATE"
+          done
+
+          for i in {1..25}  # 25 commits this year
+          do
+            DATE=$(date -d "$((RANDOM % 60)) days ago" --iso-8601=seconds)  # Last 60 days
+            echo "Fake commit on $DATE" >> log.txt
+            git add log.txt
+            GIT_COMMITTER_DATE="$DATE" git commit -m "Fake commit on $DATE" --date="$DATE"
+          done
+
+      - name: Push Changes
+        run: |
+          git push origin main
