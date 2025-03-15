@@ -1,7 +1,6 @@
 name: GitHub Contribution Booster
 
-on: 
-  workflow_dispatch # Allows manual execution
+on: workflow_dispatch  # Manual trigger
 
 jobs:
   boost-contributions:
@@ -9,6 +8,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure full history
 
       - name: Set Up Git User
         run: |
@@ -27,7 +28,7 @@ jobs:
 
           for i in {1..25}  # 25 commits this year
           do
-            DATE=$(date -d "$((RANDOM % 60)) days ago" --iso-8601=seconds)  # Last 60 days
+            DATE=$(date -d "$((RANDOM % 60)) days ago" --iso-8601=seconds)
             echo "Fake commit on $DATE" >> log.txt
             git add log.txt
             GIT_COMMITTER_DATE="$DATE" git commit -m "Fake commit on $DATE" --date="$DATE"
@@ -35,4 +36,5 @@ jobs:
 
       - name: Push Changes
         run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/YOUR_USERNAME/contribution-booster.git
           git push origin main
