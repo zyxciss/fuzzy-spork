@@ -1,40 +1,31 @@
 name: GitHub Contribution Booster
 
-on: workflow_dispatch  # Manual trigger
+on:
+  workflow_dispatch:
 
 jobs:
   boost-contributions:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Ensure full history
+        uses: actions/checkout@v4
 
       - name: Set Up Git User
         run: |
-          git config --global user.name "Your Name"
+          git config --global user.name "zyxciss"
           git config --global user.email "your-email@example.com"
 
       - name: Generate Fake Contributions
         run: |
-          for i in {1..125}  # 125 commits last year
+          for i in {1..10}
           do
-            DATE=$(date -d "$((RANDOM % 365)) days ago" --iso-8601=seconds)
-            echo "Fake commit on $DATE" >> log.txt
-            git add log.txt
-            GIT_COMMITTER_DATE="$DATE" git commit -m "Fake commit on $DATE" --date="$DATE"
-          done
-
-          for i in {1..25}  # 25 commits this year
-          do
-            DATE=$(date -d "$((RANDOM % 60)) days ago" --iso-8601=seconds)
-            echo "Fake commit on $DATE" >> log.txt
-            git add log.txt
-            GIT_COMMITTER_DATE="$DATE" git commit -m "Fake commit on $DATE" --date="$DATE"
+            echo "Fake commit $i" >> contributions.txt
+            git add contributions.txt
+            git commit -m "Fake commit $i"
           done
 
       - name: Push Changes
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/YOUR_USERNAME/contribution-booster.git
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/zyxciss/fuzzy-spork.git
           git push origin main
